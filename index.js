@@ -52,6 +52,13 @@ app.put("/api/tasks/:id", async (req, res) => {
   return res.status(200).json(taskUpdated);
 });
 
+app.delete("/api/tasks/:id", async (req, res) => {
+  const id = req.params.id;
+  const taskDeleted = await tasks.findByIdAndDelete(id);
+  if (!taskDeleted) return res.status(404).json({ message: "Task not found" });
+  return res.status(200).json({ message: "Task deleted" });
+});
+
 app.listen(PORT, () => {
   console.log(`server listening on port http://localhost:${PORT}`);
 });
