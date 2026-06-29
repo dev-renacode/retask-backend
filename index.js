@@ -1,14 +1,17 @@
 import express from "express";
-import { PORT } from "./config.js";
 import morgan from "morgan";
+import connectDB from "./db/db.js";
+
+import { PORT } from "./config.js";
+import { taskRouter } from "./routes/tasks.routes.js";
+
+connectDB();
 
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.get("/", (req, res) => {
-  res.json({ message: "Hello world" });
-});
+app.use("/api/tasks", taskRouter);
 
 app.listen(PORT, () => {
   console.log(`server listening on port http://localhost:${PORT}`);
