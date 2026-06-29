@@ -26,7 +26,7 @@ app.post("/api/tasks", async (req, res) => {
   const { success, data, error } = validateTask(req.body);
 
   if (error)
-    return res.status(500).json({ message: JSON.parse(error.message) });
+    return res.status(400).json({ message: JSON.parse(error.message) });
 
   const taskCreated = await tasks.create(data);
 
