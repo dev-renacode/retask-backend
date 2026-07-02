@@ -4,7 +4,7 @@ import { validateTask, validateTaskPartial } from "../schemas/task.scheme.js";
 export class TaskController {
   static getAll = async (req, res) => {
     try {
-      const tasks = await TaskModel.getAll();
+      const tasks = await TaskModel.getAll({ userId: req.user.id });
       return res.status(200).json(tasks);
     } catch (e) {
       res.status(500).json({ message: e.message });
@@ -18,7 +18,12 @@ export class TaskController {
       if (error)
         return res.status(400).json({ message: JSON.parse(error.message) });
 
-      const taskCreated = await TaskModel.create({ data });
+      const taskToSave = {
+        ...data,
+        userId: req.user.id,
+      };
+
+      const taskCreated = await TaskModel.create({ data: taskToSave });
 
       res.status(201).json(taskCreated);
     } catch (e) {

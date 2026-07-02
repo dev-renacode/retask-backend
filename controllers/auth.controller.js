@@ -2,7 +2,7 @@ import { AuthModel } from "../models/auth.model.js";
 import { validateRegister, validateLogin } from "../schemas/auth.schema.js";
 import bcrypt from "bcrypt";
 import { SALT_ROUNDS } from "../config.js";
-
+import jwt from "jsonwebtoken";
 export class AuthController {
   static register = async (req, res) => {
     try {
@@ -45,8 +45,22 @@ export class AuthController {
       if (!user)
         return res.status(401).json({ message: "Invalid email or password" });
 
+      const token = jwt.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" },
+      );
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 60 * 60 * 1000,
+      });
+
       res.status(200).json({
         message: "Login successful",
+        token,
         user: {
           id: user._id,
           username: user.username,

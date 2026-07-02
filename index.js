@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import "dotenv/config";
 import connectDB from "./db/db.js";
 
 import { PORT } from "./config.js";

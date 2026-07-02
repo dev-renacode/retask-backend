@@ -1,8 +1,8 @@
 import tasks from "../db/tasks.js";
 
 export class TaskModel {
-  static getAll = async () => {
-    return await tasks.find();
+  static getAll = async ({ userId }) => {
+    return await tasks.find({ userId });
   };
 
   static create = async ({ data }) => {
